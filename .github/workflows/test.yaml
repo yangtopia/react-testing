@@ -1,0 +1,24 @@
+name: testing
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+
+      - name: Cache nodemodules
+        uses: actions/cache@v2.1.2
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.OS }}-build-${{ runner.OS }}
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Testing Code
+        run: yarn test
